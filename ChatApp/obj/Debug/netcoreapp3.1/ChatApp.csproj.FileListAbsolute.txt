@@ -1,0 +1,17 @@
+C:\Projects\ChatNetCore\ChatApp\ChatApp\bin\Debug\netcoreapp3.1\ChatApp.exe
+C:\Projects\ChatNetCore\ChatApp\ChatApp\bin\Debug\netcoreapp3.1\ChatApp.deps.json
+C:\Projects\ChatNetCore\ChatApp\ChatApp\bin\Debug\netcoreapp3.1\ChatApp.runtimeconfig.json
+C:\Projects\ChatNetCore\ChatApp\ChatApp\bin\Debug\netcoreapp3.1\ChatApp.runtimeconfig.dev.json
+C:\Projects\ChatNetCore\ChatApp\ChatApp\bin\Debug\netcoreapp3.1\ChatApp.dll
+C:\Projects\ChatNetCore\ChatApp\ChatApp\bin\Debug\netcoreapp3.1\ChatApp.pdb
+C:\Projects\ChatNetCore\ChatApp\ChatApp\bin\Debug\netcoreapp3.1\Fleck.dll
+C:\Projects\ChatNetCore\ChatApp\ChatApp\bin\Debug\netcoreapp3.1\McMaster.Extensions.CommandLineUtils.dll
+C:\Projects\ChatNetCore\ChatApp\ChatApp\bin\Debug\netcoreapp3.1\System.ComponentModel.Annotations.dll
+C:\Projects\ChatNetCore\ChatApp\ChatApp\obj\Debug\netcoreapp3.1\ChatApp.csprojAssemblyReference.cache
+C:\Projects\ChatNetCore\ChatApp\ChatApp\obj\Debug\netcoreapp3.1\ChatApp.AssemblyInfoInputs.cache
+C:\Projects\ChatNetCore\ChatApp\ChatApp\obj\Debug\netcoreapp3.1\ChatApp.AssemblyInfo.cs
+C:\Projects\ChatNetCore\ChatApp\ChatApp\obj\Debug\netcoreapp3.1\ChatApp.csproj.CoreCompileInputs.cache
+C:\Projects\ChatNetCore\ChatApp\ChatApp\obj\Debug\netcoreapp3.1\ChatApp.csproj.CopyComplete
+C:\Projects\ChatNetCore\ChatApp\ChatApp\obj\Debug\netcoreapp3.1\ChatApp.dll
+C:\Projects\ChatNetCore\ChatApp\ChatApp\obj\Debug\netcoreapp3.1\ChatApp.pdb
+C:\Projects\ChatNetCore\ChatApp\ChatApp\obj\Debug\netcoreapp3.1\ChatApp.genruntimeconfig.cache

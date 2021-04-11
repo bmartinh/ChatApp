@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "lShPoFQM+BnHTpl3OyrLJffV+wVL0sgW1tuEWNd7e5ehxnxIhEx8l3mNh5zpUeeHkfhExVPr/+y+SCMwG5nGVw==",
+  "success": true,
+  "projectFilePath": "C:\\Projects\\ChatNetCore\\ChatApp\\ChatApp\\ChatApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\borja.martin\\.nuget\\packages\\fleck\\1.1.0\\fleck.1.1.0.nupkg.sha512",
+    "C:\\Users\\borja.martin\\.nuget\\packages\\mcmaster.extensions.commandlineutils\\3.1.0\\mcmaster.extensions.commandlineutils.3.1.0.nupkg.sha512",
+    "C:\\Users\\borja.martin\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\5.0.1\\microsoft.extensions.dependencyinjection.5.0.1.nupkg.sha512",
+    "C:\\Users\\borja.martin\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\5.0.0\\microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512",
+    "C:\\Users\\borja.martin\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0\\system.componentmodel.annotations.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
