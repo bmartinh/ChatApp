@@ -15,3 +15,5 @@ C:\Projects\ChatNetCore\ChatApp\ChatApp\obj\Debug\netcoreapp3.1\ChatApp.csproj.C
 C:\Projects\ChatNetCore\ChatApp\ChatApp\obj\Debug\netcoreapp3.1\ChatApp.dll
 C:\Projects\ChatNetCore\ChatApp\ChatApp\obj\Debug\netcoreapp3.1\ChatApp.pdb
 C:\Projects\ChatNetCore\ChatApp\ChatApp\obj\Debug\netcoreapp3.1\ChatApp.genruntimeconfig.cache
+C:\Projects\ChatNetCore\ChatApp\ChatApp\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
+C:\Projects\ChatNetCore\ChatApp\ChatApp\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll

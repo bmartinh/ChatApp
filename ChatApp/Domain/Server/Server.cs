@@ -1,4 +1,5 @@
 ﻿using ChatApp.Config;
+using ChatApp.Utils;
 using Fleck;
 using System;
 using System.Collections.Generic;
@@ -7,19 +8,21 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 
-namespace ChatApp.Domain
+namespace ChatApp.Domain.Server
 {
     public class Server : IServer
-    {        
+    {
         private IChatAppConfig _config;
+        private IUtils _utils;
         private int _port;
-        List<IWebSocketConnection> sockets = new List<IWebSocketConnection>();
+        List<IWebSocketConnection> _sockets = new List<IWebSocketConnection>();
 
-        public Server(IChatAppConfig config, int port)
+        public Server(IChatAppConfig config, IUtils utils, int port)
         {
             _config = config;
             _port = port;
-            sockets = new List<IWebSocketConnection>();
+            _utils = utils;
+            _sockets = new List<IWebSocketConnection>();
         }
 
         public void Run()
@@ -28,8 +31,8 @@ namespace ChatApp.Domain
             {
                 StartServer();
 
-                WaitForExitMessage();
-
+                //Loops execution until stop
+                WaitForStop();
             }
             catch (Exception ex)
             {
@@ -47,12 +50,12 @@ namespace ChatApp.Domain
 
                 socket.OnOpen = () =>
                 {
-                    sockets.Add(socket);
+                    _sockets.Add(socket);
                     InformAllUserJoined(nickName);
                 };
                 socket.OnClose = () =>
                 {
-                    sockets.Remove(socket);
+                    _sockets.Remove(socket);
                     InformAllUserDisconnected(nickName);
                 };
                 socket.OnMessage = message =>
@@ -64,29 +67,30 @@ namespace ChatApp.Domain
             Console.WriteLine($"Listening on port {_port}");
         }
 
-        private void WaitForExitMessage()
+        private void WaitForStop()
         {
             bool stop = false;
             while (!stop)
             {
                 var input = Console.ReadLine();
-                stop = IsExitMessage(input);
+                stop = _utils.IsExitMessage(input);
                 if (stop)
                     Stop();
             }
         }
+
         public void Stop()
         {
-            SendMessageToEveryone($"Server stopping on port {_port}...", sockets);
-            SendMessageToEveryone(_config.ExitMessage, sockets);
+            SendMessageToEveryone($"Server stopping on port {_port}...", _sockets);
+            _sockets.ForEach(s => s.Close());
             Console.WriteLine($"Server stopped on port {_port}");
         }
 
         private void InformAllUserSentMessage(string message, string nickName)
         {
-            if (!IsExitMessage(message))
+            if (!_utils.IsExitMessage(message))
             {
-                SendChatMessageToEveryone(message, sockets, nickName);
+                SendChatMessageToEveryone(message, _sockets, nickName);
                 Console.WriteLine($"{nickName}: {message}");
             }
         }
@@ -94,16 +98,16 @@ namespace ChatApp.Domain
         private void InformAllUserDisconnected(string nickName)
         {
             var message = $"{nickName} has disconnected";
-            SendMessageToEveryone(message, sockets);
+            SendMessageToEveryone(message, _sockets);
             Console.WriteLine(message);
         }
 
         private void InformAllUserJoined(string nickName)
         {
             var message = $"{nickName} has joined";
-            SendMessageToEveryone(message, sockets);
+            SendMessageToEveryone(message, _sockets);
             Console.WriteLine(message);
-        }        
+        }
 
         private static void SendChatMessageToEveryone(string message, List<IWebSocketConnection> sockets, string nickName)
         {
@@ -119,11 +123,5 @@ namespace ChatApp.Domain
         {
             return socket.ConnectionInfo.Path.Replace("/", "");
         }
-       
-        private bool IsExitMessage(string message)
-        {
-            return message == _config.ExitMessage;
-        }
-
     }
 }

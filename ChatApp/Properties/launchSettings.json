@@ -2,7 +2,7 @@
   "profiles": {
     "ChatApp": {
       "commandName": "Project",
-      "commandLineArgs": "8181 Paco"
+      "commandLineArgs": "8181"
     }
   }
 }

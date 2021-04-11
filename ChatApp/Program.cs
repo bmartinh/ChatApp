@@ -1,4 +1,7 @@
 ﻿using ChatApp.Config;
+using ChatApp.Domain.Server;
+using ChatApp.Domain.Client;
+using ChatApp.Utils;
 using Fleck;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,62 +27,31 @@ namespace ChatApp
         [Argument(0, Description = "Port to be used")]
         private int Port { get; }
 
-        [Argument(1, Description = "The name of the user if it's a client")]
+        [Argument(1, Description = "Chat nickname (only for client)")]
         private string Username { get; }
 
         private void OnExecute()
         {
             var serviceProvider = new ServiceCollection()                        
             .AddSingleton<IChatAppConfig, ChatAppConfig>()
+            .AddSingleton<IUtils, UtilsImpl>()            
             .BuildServiceProvider();
 
             try
-            {  
-                if (!IsPortBusy(Port))
-                {
-                    bool stop = false;
-                    List<IWebSocketConnection> sockets = new List<IWebSocketConnection>();
-                    var server = new WebSocketServer($"ws://127.0.0.1:{Port}");
-
-                    server.Start(socket =>
-                    {
-                        string nickName = GetNickName(socket);
-
-                        socket.OnOpen = () =>
-                        {
-                            sockets.Add(socket);
-                            var message = $"{nickName} has joined";
-                            SendMessageToEveryone(message, sockets);
-                            Console.WriteLine(message);
-                        };
-                        socket.OnClose = () =>
-                        {
-                            sockets.Remove(socket);
-                            var message = $"{nickName} has disconnected";
-                            SendMessageToEveryone(message, sockets);
-                            Console.WriteLine(message);                            
-                        };
-                        socket.OnMessage = message =>
-                        {
-                            if (!IsExitMessage(message))
-                            {
-                                SendChatMessageToEveryone(message, sockets, nickName);
-                                Console.WriteLine($"{nickName}: {message}");
-                            }                            
-                        };
-                    });
-
-                    Console.WriteLine($"Listening on {Port}");
-
-                    while (!stop)
-                    {
-                        var input = Console.ReadLine();
-                        stop = IsExitMessage(input);                        
-                    }
+            {
+                var utils = serviceProvider.GetService<IUtils>();
+                var config = serviceProvider.GetService<IChatAppConfig>();
+                
+                if (!utils.IsPortBusy(Port))
+                {                    
+                    var server = new Server(config, utils, Port);
+                    server.Run();
                 }
                 else
                 {
-                    RunClient();
+                    var client = new Client(config, utils, Port, Username);
+                    client.Run();
+                    //RunClient();
                 }                               
             }
             catch (Exception ex)
@@ -130,7 +102,7 @@ namespace ChatApp
                 task.Wait();
                 task.Dispose();
 
-                Console.WriteLine($"Logged in to chat in port {Port}");
+                Console.WriteLine($"Logged in to chat in port {Port} as {Username}");
                 Console.WriteLine(@"Type ""exit"" to quit... ");
                
                 Task readConsoleAndSend = Task.Run(() =>
@@ -155,32 +127,47 @@ namespace ChatApp
                 Task readFromServer = Task.Run(() =>
                 {
                     var input = "";
-                    while (!IsExitMessage(input))
+                    bool connectionClosed = false;
+                    while (!connectionClosed)
                     {
                         var buffer = new byte[1024];
                         var result = webSocketClient.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None).GetAwaiter().GetResult();
-                        input = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                        Console.WriteLine(input);
+                        if (result.MessageType == WebSocketMessageType.Text)
+                        {
+                            input = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                            Console.WriteLine(input);
+                        }
+                        else if(result.MessageType == WebSocketMessageType.Close)
+                        {
+                            CloseConnection(webSocketClient, tokenSource, result.CloseStatus.Value);
+                            Console.WriteLine("Connection closed by the server");
+                            connectionClosed = true;
+                        }
+
                     }
                     return;
                 });               
 
-                var finishedTask = Task.WhenAny(new List<Task> { readConsoleAndSend , readFromServer }).GetAwaiter().GetResult();
+                Task.WhenAny(new List<Task> { readConsoleAndSend , readFromServer }).GetAwaiter().GetResult();
               
                 if (webSocketClient.State == WebSocketState.Open)
-                {
-                    task = webSocketClient.CloseAsync(WebSocketCloseStatus.NormalClosure, "", tokenSource.Token);
-                    task.Wait();
-                    task.Dispose();
+                {                    
+                    CloseConnection(webSocketClient, tokenSource, WebSocketCloseStatus.NormalClosure);
+                    
                 }
 
                 tokenSource.Dispose();
-                Console.WriteLine("WebSocket CLOSED");                              
+                Console.WriteLine("Chat terminated");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }            
+        }
+
+        private static void CloseConnection(ClientWebSocket webSocketClient, CancellationTokenSource tokenSource, WebSocketCloseStatus closeStatus)
+        {
+            webSocketClient.CloseAsync(closeStatus, "", tokenSource.Token).GetAwaiter().GetResult();
         }
 
         private bool IsExitMessage(string message)
