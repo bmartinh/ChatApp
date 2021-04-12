@@ -51,6 +51,9 @@ namespace ChatApp.Domain.Client
 
         private void Login()
         {
+            if (string.IsNullOrEmpty(_userName))
+                throw new ArgumentNullException("Username", "Username cannot be empty. Usage: ChatApp [Port] [Username]");
+
             _webSocketClient.ConnectAsync(new Uri($"ws://127.0.0.1:{_port}/{_userName}"), _cancellationTokenSource.Token)
                 .GetAwaiter().GetResult();
 
@@ -121,8 +124,6 @@ namespace ChatApp.Domain.Client
                                     _cancellationTokenSource.Token
                                 ).GetAwaiter().GetResult();
         }
-
-
 
         private static void CloseConnection(ClientWebSocket webSocketClient, CancellationTokenSource tokenSource, WebSocketCloseStatus closeStatus)
         {
