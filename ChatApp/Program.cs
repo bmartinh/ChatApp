@@ -2,18 +2,9 @@
 using ChatApp.Domain.Server;
 using ChatApp.Domain.Client;
 using ChatApp.Utils;
-using Fleck;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.WebSockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ChatApp
 {
