@@ -20,15 +20,20 @@ In case the port is open, Server is created and run. Otherwise Client is created
 
 # Server
 
-It has two main methods. StartServer and WaitForStop
-StartServer creates a WebSocketServer and handles the logic when OnOpen, OnMessage and OnClose
-WaitForStop listens in loop for input entry and stops when it receives the exit message
+It has two main methods. StartServer and WaitForStop.
+
+StartServer creates a WebSocketServer and handles the logic when OnOpen, OnMessage and OnClose.
+
+WaitForStop listens in loop for input entry and stops when it receives the exit message.
+
 It also has different methods to send messages to all suscribers and notify the local console with events.
 
 # Client
 
-It has a method to perform a Login, then two main methods for two tasks that are run concurrently. ReadConsoleAndSendHandler and ReceiveFromServer
+It has a method to perform a Login, then two main methods for two tasks that are run concurrently: ReadConsoleAndSendHandler and ReceiveFromServer.
+
 Client reads user input and checks for the exit message, sending messages the user types, and at the same time listens to the server and displays the messages it receives.
+
 Also finalizes when server is disconnected.
 
 
